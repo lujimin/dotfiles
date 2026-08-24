@@ -2,9 +2,6 @@
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 
-# Paths currently configured in this machine's fish_user_paths.
-fish_add_path --global $HOME/.local/bin $HOME/.config/kaku/fish/bin
-
 # Initialize Homebrew before loading its Fish completions.
 if test -x /opt/homebrew/bin/brew
     eval (/opt/homebrew/bin/brew shellenv)
