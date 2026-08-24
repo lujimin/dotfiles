@@ -11,6 +11,7 @@ set -eufo pipefail
      "dockutil"
      "eza"
      "fd"
+     "ffmpeg"
      "fish"
      "fzf"
      "gdu"
@@ -23,6 +24,7 @@ set -eufo pipefail
      "jless"
      "jq"
      "neovim"
+     "node"
      "pkg-config"
      "ripgrep"
      "shellcheck"
@@ -30,29 +32,22 @@ set -eufo pipefail
      "tmux"
      "wget"
      "xz"
+     "yt-dlp"
      "zoxide" -}}
 {{ $casks := list
-     "visual-studio-code" -}}
-
-{{ if .personal -}}
-{{   $brews = concat $brews (list
-       "ffmpeg"
-       "node"
-       "yt-dlp") -}}
-{{   $casks = concat $casks (list
-       "balenaetcher"
-       "firefox"
-       "ghostty"
-       "google-chrome"
-       "google-earth-pro"
-       "hot"
-       "notunes"
-       "steam"
-       "tailscale-app"
-       "transmission"
-       "vagrant"
-       "vlc") -}}
-{{ end -}}
+     "balenaetcher"
+     "firefox"
+     "ghostty"
+     "google-chrome"
+     "google-earth-pro"
+     "hot"
+     "notunes"
+     "steam"
+     "tailscale-app"
+     "transmission"
+     "vagrant"
+     "visual-studio-code"
+     "vlc" -}}
 
 brew bundle --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
