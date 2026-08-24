@@ -16,7 +16,6 @@ local bindings = {
     f = launchOrFocus('Finder'),
     i = launchOrFocus('Visual Studio Code'),
     j = runCommand(os.getenv('HOME') .. '/.local/bin/forge-gui'),
-    o = launchOrFocus('1Password'),
     t = launchOrFocus('Ghostty'),
     y = launchOrFocus('System Preferences'),
   },
