@@ -1,9 +1,9 @@
-# github.com/twpayne/dotfiles
+# github.com/lujimin/dotfiles
 
-Tom Payne's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
+lujimin's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
 Install them with:
 
 ```console
-$ chezmoi init twpayne
+$ chezmoi init lujimin
 ```
