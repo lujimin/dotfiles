@@ -35,19 +35,19 @@ set -eufo pipefail
      "yt-dlp"
      "zoxide" -}}
 {{ $casks := list
-     "balenaetcher"
-     "firefox"
-     "ghostty"
+     "coconutbattery"
+     "codex"
+     "codex-app"
+     "font-maple-mono-nf-cn"
      "google-chrome"
-     "google-earth-pro"
-     "hot"
-     "notunes"
-     "steam"
-     "tailscale-app"
-     "transmission"
-     "vagrant"
+     "homerow"
+     "kitty"
+     "multitouch"
+     "thunder"
+     "uuremote"
      "visual-studio-code"
-     "vlc" -}}
+     "wechatwebdevtools"
+     "winbox" -}}
 
 brew bundle --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
