@@ -16,6 +16,9 @@ set -eufo pipefail
      "git-lfs"
      "jless"
      "jq"
+     "lazygit"
+     "mactop"
+     "mole"
      "neovim"
      "node"
      "pkg-config"
@@ -25,6 +28,8 @@ set -eufo pipefail
      "tmux"
      "wget"
      "zoxide" -}}
+{{ $trustedBrews := list
+     "can1357/tap/omp" -}}
 {{ $casks := list
      "coconutbattery"
      "codex"
@@ -45,6 +50,9 @@ set -eufo pipefail
 brew bundle --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
 brew "{{ . }}"
+{{ end -}}
+{{ range ($trustedBrews | sortAlpha | uniq) -}}
+brew "{{ . }}", trusted: true
 {{ end -}}
 {{ range ($casks | sortAlpha | uniq) -}}
 cask "{{ . }}"
