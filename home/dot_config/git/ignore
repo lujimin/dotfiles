@@ -5,7 +5,6 @@
 .Python
 .envrc
 .idea
-.pc
 .svn
 .vscode
 /tmp

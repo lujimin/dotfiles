@@ -1,4 +1,4 @@
-{{ if eq .osid "linux-ubuntu" -}}
+{{ if eq .chezmoi.osRelease.id "ubuntu" -}}
 #!/bin/bash
 
 tmpdeb="$(mktemp)"
