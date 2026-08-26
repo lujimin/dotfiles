@@ -1,0 +1,11 @@
+Host 7ze
+    HostName 7z
+    User ljm
+    IdentityFile "/Users/lujimin/Library/Mobile Documents/com~apple~CloudDocs/工作/ssh/lujimin_216_23_121_143_ed25519"
+    IdentitiesOnly yes
+
+Host p7z
+    HostName 7ze
+    User ljm
+    IdentityFile "/Users/lujimin/Library/Mobile Documents/com~apple~CloudDocs/工作/ssh/lujimin_216_23_121_143_ed25519"
+    IdentitiesOnly yes
