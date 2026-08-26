@@ -23,10 +23,8 @@
 {{   $packages = mustAppend $packages "btop" -}}
 {{ end -}}
 
-{{ if not .headless -}}
-{{   $packages = mustAppend $packages "xclip" -}}
-{{   $classicSnaps = mustAppend $classicSnaps "code" -}}
-{{ end -}}
+{{ $packages = mustAppend $packages "xclip" -}}
+{{ $classicSnaps = mustAppend $classicSnaps "code" -}}
 
 {{ if .personal -}}
 {{   $packages = mustAppend $packages "musl-tools" -}}

@@ -1,4 +1,3 @@
-{{ if not .headless -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -24,4 +23,3 @@ gsettings set org.gnome.shell.extensions.ding show-volumes false
 
 # https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1878953
 gsettings set org.gnome.mutter.keybindings switch-monitor "[]"
-{{ end -}}

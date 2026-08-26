@@ -1,6 +1,5 @@
 {{/* boolean feature tags */}}
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
-{{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
 {{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- "" -}}
 
@@ -20,14 +19,9 @@
 {{- else if eq $hostname "thinkpad" -}}
 {{-   $personal = true -}}
 {{- else if eq $hostname "ubuntu" "ubuntu-26" -}}
-{{-   $headless = true -}}
 {{-   $personal = true -}}
 {{- else if eq $hostname "zrh-mpl3s" -}}
 {{-   $work = true -}}
-{{- else if stdinIsATTY -}}
-{{-   $headless = promptBoolOnce . "headless" "headless" -}}
-{{- else -}}
-{{-   $headless = true -}}
 {{- end -}}
 
 {{- $email := "ljm@vip.qq.com" -}}
@@ -38,7 +32,6 @@
 [data]
     email = {{ $email | quote }}
     work = {{ $work }}
-    headless = {{ $headless }}
     hostname = {{ $hostname | quote }}
     personal = {{ $personal }}
     osid = {{ $osID | quote }}
