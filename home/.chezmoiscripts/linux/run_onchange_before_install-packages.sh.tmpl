@@ -26,10 +26,8 @@
 {{ $packages = mustAppend $packages "xclip" -}}
 {{ $classicSnaps = mustAppend $classicSnaps "code" -}}
 
-{{ if .personal -}}
-{{   $packages = mustAppend $packages "musl-tools" -}}
-{{   $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
-{{ end -}}
+{{ $packages = mustAppend $packages "musl-tools" -}}
+{{ $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
 
 {{ $sudo := "sudo " -}}
 {{ if eq .chezmoi.username "root" -}}

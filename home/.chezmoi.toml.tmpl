@@ -1,6 +1,5 @@
 {{/* boolean feature tags */}}
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
-{{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- "" -}}
 
 {{- $osID := .chezmoi.os -}}
@@ -14,13 +13,7 @@
 {{-   $hostname := output "scutil" "--get" "LocalHostName" | trim -}}
 {{- end -}}
 
-{{- if eq $hostname "macbook-air-m3" -}}
-{{-   $personal = true -}}
-{{- else if eq $hostname "thinkpad" -}}
-{{-   $personal = true -}}
-{{- else if eq $hostname "ubuntu" "ubuntu-26" -}}
-{{-   $personal = true -}}
-{{- else if eq $hostname "zrh-mpl3s" -}}
+{{- if eq $hostname "zrh-mpl3s" -}}
 {{-   $work = true -}}
 {{- end -}}
 
@@ -33,7 +26,6 @@
     email = {{ $email | quote }}
     work = {{ $work }}
     hostname = {{ $hostname | quote }}
-    personal = {{ $personal }}
     osid = {{ $osID | quote }}
 
 {{- if lookPath "podman" }}
