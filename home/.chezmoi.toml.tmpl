@@ -17,13 +17,7 @@
 {{-   $work = true -}}
 {{- end -}}
 
-{{- $email := "ljm@vip.qq.com" -}}
-{{- if $work -}}
-{{-   $email = "ljm@vip.qq.com" -}}
-{{- end -}}
-
 [data]
-    email = {{ $email | quote }}
     work = {{ $work }}
     hostname = {{ $hostname | quote }}
     osid = {{ $osID | quote }}
