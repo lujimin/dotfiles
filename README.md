@@ -1,5 +1,3 @@
-# github.com/lujimin/dotfiles
-
 lujimin 的 dotfiles，使用 [`chezmoi`](https://github.com/twpayne/chezmoi) 管理。
 
 ## 前置条件
@@ -11,14 +9,14 @@ lujimin 的 dotfiles，使用 [`chezmoi`](https://github.com/twpayne/chezmoi) �
 
 ## 安装
 
-如果已经安装 chezmoi：
+首先使用 Homebrew 手动安装 chezmoi：
+
+```console
+$ brew install chezmoi
+```
+
+然后初始化仓库并应用这些 dotfiles：
 
 ```console
 $ chezmoi init --apply lujimin
-```
-
-使用一条命令安装 chezmoi 并应用这些 dotfiles：
-
-```console
-$ sh -c "$(curl -fsLS https://get.chezmoi.io)" -- init --apply lujimin
 ```
