@@ -36,6 +36,15 @@ defaults write -g NSAutomaticSpellingCorrectionEnabled -int 0
 # 禁用使用 WebKit 的应用和网页输入框中的自动拼写纠正
 defaults write -g WebAutomaticSpellingCorrectionEnabled -int 0
 
+# 桌面与程序坞 > 窗口 > 将窗口标题栏连按操作设为“填充”
+defaults write -g AppleActionOnDoubleClick -string Fill
+
+# 桌面与程序坞 > 窗口 > 启用平铺窗口边缘空白
+defaults write com.apple.WindowManager EnableTiledWindowMargins -bool true
+
+# 桌面与程序坞 > 调度中心 > 使窗口按应用程序成组
+defaults write com.apple.dock expose-group-apps -bool true
+
 # 键盘快捷键 > 调度中心 > 显示通知中心（⌃⌥⌘N）
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 163 \
     '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>110</integer><integer>45</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
