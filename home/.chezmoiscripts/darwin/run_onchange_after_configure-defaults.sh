@@ -36,6 +36,11 @@ defaults write -g NSAutomaticSpellingCorrectionEnabled -int 0
 # 禁用使用 WebKit 的应用和网页输入框中的自动拼写纠正
 defaults write -g WebAutomaticSpellingCorrectionEnabled -int 0
 
+# 桌面与程序坞 > 程序坞 > 启用图标放大效果，并将普通大小设为 50、放大后大小设为 70
+defaults write com.apple.dock tilesize -int 50
+defaults write com.apple.dock largesize -int 70
+defaults write com.apple.dock magnification -bool true
+
 # 桌面与程序坞 > 窗口 > 将窗口标题栏连按操作设为“填充”
 defaults write -g AppleActionOnDoubleClick -string Fill
 
