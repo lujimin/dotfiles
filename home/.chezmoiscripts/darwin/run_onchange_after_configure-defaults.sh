@@ -50,27 +50,19 @@ defaults write com.apple.WindowManager EnableTiledWindowMargins -bool true
 # 桌面与程序坞 > 调度中心 > 使窗口按应用程序成组
 defaults write com.apple.dock expose-group-apps -bool true
 
-# 键盘快捷键 > 调度中心 > 显示通知中心（⌃⌥⌘N）
+# 键盘快捷键 > 调度中心 > 显示通知中心（⌃⌥N）
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 163 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>110</integer><integer>45</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
+    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>110</integer><integer>45</integer><integer>786432</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-# 键盘快捷键 > 调度中心 > 打开/关闭台前调度（⌃⌥⌘D）
+# 键盘快捷键 > 调度中心 > 打开/关闭台前调度（⌃⌥A）
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 222 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
+    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>97</integer><integer>0</integer><integer>786432</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-# 键盘快捷键 > 窗口 > 缩放（⌃⌥⌘F）
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 235 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>102</integer><integer>3</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
-
-# 键盘快捷键 > 窗口 > 四分排列（⌃⌥⌘S）
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 256 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>115</integer><integer>1</integer><integer>1835008</integer></array><key>type</key><string>standard</string></dict></dict>'
-
-# 键盘快捷键 > 窗口 > 全屏幕平铺到左侧/右侧（⌃⌥⌘←/→）
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 257 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>123</integer><integer>10223616</integer></array><key>type</key><string>standard</string></dict></dict>'
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 258 \
-    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>65535</integer><integer>124</integer><integer>10223616</integer></array><key>type</key><string>standard</string></dict></dict>'
+# 键盘快捷键 > 调度中心 > 显示桌面（⌃⌥D）
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 36 \
+    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>786432</integer></array><key>type</key><string>standard</string></dict></dict>'
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 37 \
+    '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>917504</integer></array><key>type</key><string>standard</string></dict></dict>'
 
 # 重新加载当前用户的快捷键配置，使上述修改立即生效
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
