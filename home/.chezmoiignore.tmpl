@@ -2,10 +2,6 @@
 .chezmoiscripts/darwin/**
 {{ end }}
 
-{{ if ne .chezmoi.hostname "MacBook-Pro-16" }}
-Library/LaunchAgents/com.local.KeyRemapping.plist
-{{ end }}
-
 {{ if ne .chezmoi.os "linux" }}
 .chezmoiscripts/linux/**
 .local/bin/nvim
