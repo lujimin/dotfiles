@@ -64,9 +64,6 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 36 \
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 37 \
     '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array><integer>100</integer><integer>2</integer><integer>917504</integer></array><key>type</key><string>standard</string></dict></dict>'
 
-# 重新加载当前用户的快捷键配置，使上述修改立即生效
-/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-
 # 自动隐藏和显示 Dock（当前未启用）
 # defaults write com.apple.dock autohide -int 1
 
@@ -81,3 +78,6 @@ defaults write com.apple.finder FXPreferredViewStyle -string Nlsv
 
 # Finder 按名称等条件排序时，将文件夹显示在文件之前
 defaults write com.apple.finder _FXSortFoldersFirst -int 1
+
+# 在所有偏好设置写入后，重新加载当前用户的快捷键配置
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
