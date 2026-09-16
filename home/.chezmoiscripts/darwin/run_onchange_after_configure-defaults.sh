@@ -33,6 +33,9 @@ defaults -currentHost write -g com.apple.trackpad.threeFingerVertSwipeGesture -i
 defaults -currentHost write -g com.apple.trackpad.fourFingerHorizSwipeGesture -int 2
 defaults -currentHost write -g com.apple.trackpad.fourFingerVertSwipeGesture -int 2
 
+# 触控板 > 更多手势 > App Exposé > 启用四指向下轻扫，显示当前应用的所有窗口
+defaults write com.apple.dock showAppExposeGestureEnabled -bool true
+
 # 禁用长按按键时弹出的重音字符选择菜单，使长按恢复为连续输入
 defaults write -g ApplePressAndHoldEnabled -int 0
 
