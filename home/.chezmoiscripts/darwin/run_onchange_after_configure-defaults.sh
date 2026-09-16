@@ -6,6 +6,21 @@ set -eufo pipefail
 # 禁用双指左右轻扫的页面前进/后退手势（当前未启用）
 # defaults write -g AppleEnableSwipeNavigateWithScrolls -int 0
 
+# 鼠标 > 跟踪速度 > 保存当前值（适用于妙控鼠标等鼠标设备）
+defaults write -g com.apple.mouse.scaling -float 2.5
+
+# 触控板 > 光标与点按 > 跟踪速度 > 保存当前值（适用于妙控板和内置触控板）
+defaults write -g com.apple.trackpad.scaling -float 0.875
+
+# 辅助功能 > 指针控制 > 触控板选项 > 将拖移样式设为“三指拖移”
+# 同时配置内置和蓝牙触控板，并关闭其他拖移方式
+defaults write com.apple.AppleMultitouchTrackpad Dragging -bool false
+defaults write com.apple.AppleMultitouchTrackpad DragLock -bool false
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool false
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -bool false
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
+
 # 禁用长按按键时弹出的重音字符选择菜单，使长按恢复为连续输入
 defaults write -g ApplePressAndHoldEnabled -int 0
 

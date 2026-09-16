@@ -44,7 +44,8 @@ set -eufo pipefail
      "visual-studio-code"
      "wechatwebdevtools"
      "winbox" -}}
-brew bundle --file=/dev/stdin <<EOF
+# 实时显示各个包的下载、安装和升级输出
+brew bundle --verbose --file=/dev/stdin <<EOF
 {{ range ($brews | sortAlpha | uniq) -}}
 brew "{{ . }}"
 {{ end -}}
