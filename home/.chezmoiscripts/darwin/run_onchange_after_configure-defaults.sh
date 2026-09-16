@@ -14,12 +14,24 @@ defaults write -g com.apple.trackpad.scaling -float 0.875
 
 # 辅助功能 > 指针控制 > 触控板选项 > 将拖移样式设为“三指拖移”
 # 同时配置内置和蓝牙触控板，并关闭其他拖移方式
-defaults write com.apple.AppleMultitouchTrackpad Dragging -bool false
-defaults write com.apple.AppleMultitouchTrackpad DragLock -bool false
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -bool false
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -bool false
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
+for trackpad_domain in com.apple.AppleMultitouchTrackpad com.apple.driver.AppleBluetoothMultitouch.trackpad; do
+    defaults write "$trackpad_domain" Dragging -bool false
+    defaults write "$trackpad_domain" DragLock -bool false
+    defaults write "$trackpad_domain" TrackpadThreeFingerDrag -bool true
+
+    # 为三指拖移让出手势，将切换全屏应用和调度中心的轻扫手势设为四指
+    defaults write "$trackpad_domain" TrackpadThreeFingerHorizSwipeGesture -int 0
+    defaults write "$trackpad_domain" TrackpadThreeFingerVertSwipeGesture -int 0
+    defaults write "$trackpad_domain" TrackpadFourFingerHorizSwipeGesture -int 2
+    defaults write "$trackpad_domain" TrackpadFourFingerVertSwipeGesture -int 2
+done
+
+# 同步当前机器的全局偏好（ByHost）；只写设备配置会导致手势行为与设置界面不一致
+defaults -currentHost write -g com.apple.trackpad.threeFingerDragGesture -bool true
+defaults -currentHost write -g com.apple.trackpad.threeFingerHorizSwipeGesture -int 0
+defaults -currentHost write -g com.apple.trackpad.threeFingerVertSwipeGesture -int 0
+defaults -currentHost write -g com.apple.trackpad.fourFingerHorizSwipeGesture -int 2
+defaults -currentHost write -g com.apple.trackpad.fourFingerVertSwipeGesture -int 2
 
 # 禁用长按按键时弹出的重音字符选择菜单，使长按恢复为连续输入
 defaults write -g ApplePressAndHoldEnabled -int 0
