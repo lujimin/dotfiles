@@ -39,10 +39,10 @@ if status is-interactive
             abbr --add elg 'eza --long --all --header --git --icons=auto --group-directories-first'
         end
         if not type -q eld; and not abbr --query eld
-            abbr --add eld 'eza --long --header --only-dirs --icons=auto --group-directories-first'
+            abbr --add eld 'eza --long --all --header --only-dirs --icons=auto --group-directories-first'
         end
         if not type -q elf; and not abbr --query elf
-            abbr --add elf 'eza --long --header --only-files --icons=auto --group-directories-first'
+            abbr --add elf 'eza --long --all --header --only-files --icons=auto --group-directories-first'
         end
     end
 
