@@ -4,14 +4,16 @@
 
 set -euo pipefail
 
-# makepkg 需要使用普通用户构建软件包。
-if (( EUID == 0 )); then
-    echo "请以具有 sudo 权限的普通用户运行 chezmoi，以便构建 paru 和 AUR 软件包。" >&2
-    exit 1
-fi
+# 普通用户通过 sudo 执行系统操作，root 用户直接执行。
+run_as_root() {
+    if (( EUID == 0 )); then
+        "$@"
+    else
+        sudo "$@"
+    fi
+}
 
 packages=(
-    base-devel
     bat
     btop
     chezmoi
@@ -28,6 +30,8 @@ packages=(
     lazygit
     neovim
     nodejs
+    oh-my-pi
+    paru
     pkgconf
     ripgrep
     shellcheck
@@ -38,47 +42,24 @@ packages=(
     zoxide
 )
 
-aur_packages=(
-    oh-my-pi
-)
-
 # 读取 pacman 的有效配置，兼容通过 Include 引入的仓库，避免重复添加。
 configured_repos="$(pacman-conf --repo-list)"
 if ! grep -Fxq archlinuxcn <<< "$configured_repos"; then
-    sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
+    run_as_root tee -a /etc/pacman.conf >/dev/null <<'EOF'
 
 [archlinuxcn]
 Server = https://repo.archlinuxcn.org/$arch
 EOF
 fi
 
-# 首次安装密钥环前，按社区说明信任其签名密钥，保持软件包签名校验开启。
+# 首次使用时，先信任签名密钥并安装密钥环。
 if ! pacman -Q archlinuxcn-keyring >/dev/null 2>&1; then
-    sudo pacman-key --lsign-key farseerfc@archlinux.org
+    run_as_root pacman-key --lsign-key farseerfc@archlinux.org
+    run_as_root pacman -Sy --needed --noconfirm archlinuxcn-keyring
 fi
-
-# 先刷新数据库并安装密钥环，再进行全系统升级和其他软件包安装。
-sudo pacman -Sy --needed --noconfirm archlinuxcn-keyring
 
 # 刷新软件包数据库、升级整个系统，并安装清单中的软件包。
-sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
-
-# 缺少 paru 时，在临时目录中构建安装，退出时自动清理构建文件。
-if ! command -v paru >/dev/null 2>&1; then
-    (
-        paru_build_dir="$(mktemp -d)"
-        trap 'rm -rf -- "$paru_build_dir"' EXIT
-
-        git clone --depth 1 https://aur.archlinux.org/paru.git "$paru_build_dir/paru"
-        cd "$paru_build_dir/paru"
-        makepkg --syncdeps --install --noconfirm
-    )
-fi
-
-# 使用 paru 安装尚未安装的 AUR 软件包。
-if ! pacman -Q -- "${aur_packages[@]}" >/dev/null 2>&1; then
-    paru -S --needed --noconfirm -- "${aur_packages[@]}"
-fi
+run_as_root pacman -Syu --needed --noconfirm -- "${packages[@]}"
 
 {{ end -}}
 {{ end -}}
