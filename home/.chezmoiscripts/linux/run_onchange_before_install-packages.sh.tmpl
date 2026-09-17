@@ -1,52 +1,67 @@
-{{ if eq .chezmoi.osRelease.id "debian" "raspbian" "ubuntu" -}}
-
-{{ $packages := list
-     "bat"
-     "build-essential"
-     "curl"
-     "fd-find"
-     "fish"
-     "fzf"
-     "git"
-     "jq"
-     "libfuse2"
-     "neovim"
-     "openssh-server"
-     "ripgrep"
-     "shellcheck"
-     "units" -}}
-{{ $snaps := list -}}
-{{ $classicSnaps := list -}}
-
-{{ if eq .chezmoi.osRelease.id "ubuntu" -}}
-{{   $packages = mustAppend $packages "btop" -}}
-{{ end -}}
-
-{{ $packages = mustAppend $packages "xclip" -}}
-{{ $classicSnaps = mustAppend $classicSnaps "code" -}}
-
-{{ $packages = mustAppend $packages "musl-tools" -}}
-{{ $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
-
-{{ $sudo := "sudo " -}}
-{{ if eq .chezmoi.username "root" -}}
-{{   $sudo = "" -}}
-{{ end -}}
-
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
 #!/bin/bash
 
-set -eufo pipefail
+set -euo pipefail
 
-{{ $sudo }}apt-get update
-{{ $sudo }}apt-get install -y {{ $packages | join " " }}
+packages=(
+    bat
+    btop
+    chezmoi
+    curl
+    eza
+    fd
+    ffmpeg
+    fish
+    fzf
+    git
+    github-cli
+    jless
+    jq
+    lazygit
+    neovim
+    nodejs
+    pkgconf
+    ripgrep
+    shellcheck
+    starship
+    tmux
+    tree-sitter-cli
+    wget
+    zoxide
+)
 
-{{ if lookPath "snap" }}
-{{   range $snaps }}
-( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install {{ . }}
-{{   end }}
-{{   range $classicSnaps }}
-( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install --classic {{ . }}
-{{   end }}
-{{ end }}
+aur_packages=(
+    oh-my-pi
+)
 
+# 安装前检查 AUR 所需条件，缺少条件时明确报错，不静默跳过。
+aur_helper=""
+if ! pacman -Q -- "${aur_packages[@]}" >/dev/null 2>&1; then
+    if (( EUID == 0 )); then
+        echo "Missing AUR packages: run chezmoi as a regular user with paru or yay installed." >&2
+        exit 1
+    fi
+    if command -v paru >/dev/null 2>&1; then
+        aur_helper=paru
+    elif command -v yay >/dev/null 2>&1; then
+        aur_helper=yay
+    else
+        echo "Install paru or yay first, or install oh-my-pi manually." >&2
+        exit 1
+    fi
+fi
+
+# 刷新软件包数据库、升级整个系统，并安装清单中的软件包。
+if (( EUID == 0 )); then
+    pacman -Syu --needed --noconfirm -- "${packages[@]}"
+else
+    sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+fi
+
+if [[ -n "$aur_helper" ]]; then
+    "$aur_helper" -S --needed --noconfirm -- "${aur_packages[@]}"
+fi
+
+{{ end -}}
 {{ end -}}

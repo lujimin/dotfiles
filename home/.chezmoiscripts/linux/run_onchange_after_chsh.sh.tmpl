@@ -2,4 +2,9 @@
 
 set -eufo pipefail
 
-chsh -s /usr/bin/fish
+if ! fish_path="$(command -v fish)"; then
+    echo "未找到 Fish，请先安装并确保其所在目录已加入 PATH。" >&2
+    exit 1
+fi
+
+chsh -s "$fish_path"
