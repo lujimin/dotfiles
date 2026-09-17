@@ -4,7 +4,14 @@
 
 set -euo pipefail
 
+# makepkg 需要使用普通用户构建软件包。
+if (( EUID == 0 )); then
+    echo "请以具有 sudo 权限的普通用户运行 chezmoi，以便构建 paru 和 AUR 软件包。" >&2
+    exit 1
+fi
+
 packages=(
+    base-devel
     bat
     btop
     chezmoi
@@ -35,32 +42,42 @@ aur_packages=(
     oh-my-pi
 )
 
-# 安装前检查 AUR 所需条件，缺少条件时明确报错，不静默跳过。
-aur_helper=""
-if ! pacman -Q -- "${aur_packages[@]}" >/dev/null 2>&1; then
-    if (( EUID == 0 )); then
-        echo "Missing AUR packages: run chezmoi as a regular user with paru or yay installed." >&2
-        exit 1
-    fi
-    if command -v paru >/dev/null 2>&1; then
-        aur_helper=paru
-    elif command -v yay >/dev/null 2>&1; then
-        aur_helper=yay
-    else
-        echo "Install paru or yay first, or install oh-my-pi manually." >&2
-        exit 1
-    fi
+# 读取 pacman 的有效配置，兼容通过 Include 引入的仓库，避免重复添加。
+configured_repos="$(pacman-conf --repo-list)"
+if ! grep -Fxq archlinuxcn <<< "$configured_repos"; then
+    sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
+
+[archlinuxcn]
+Server = https://repo.archlinuxcn.org/$arch
+EOF
 fi
+
+# 首次安装密钥环前，按社区说明信任其签名密钥，保持软件包签名校验开启。
+if ! pacman -Q archlinuxcn-keyring >/dev/null 2>&1; then
+    sudo pacman-key --lsign-key farseerfc@archlinux.org
+fi
+
+# 先刷新数据库并安装密钥环，再进行全系统升级和其他软件包安装。
+sudo pacman -Sy --needed --noconfirm archlinuxcn-keyring
 
 # 刷新软件包数据库、升级整个系统，并安装清单中的软件包。
-if (( EUID == 0 )); then
-    pacman -Syu --needed --noconfirm -- "${packages[@]}"
-else
-    sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+
+# 缺少 paru 时，在临时目录中构建安装，退出时自动清理构建文件。
+if ! command -v paru >/dev/null 2>&1; then
+    (
+        paru_build_dir="$(mktemp -d)"
+        trap 'rm -rf -- "$paru_build_dir"' EXIT
+
+        git clone --depth 1 https://aur.archlinux.org/paru.git "$paru_build_dir/paru"
+        cd "$paru_build_dir/paru"
+        makepkg --syncdeps --install --noconfirm
+    )
 fi
 
-if [[ -n "$aur_helper" ]]; then
-    "$aur_helper" -S --needed --noconfirm -- "${aur_packages[@]}"
+# 使用 paru 安装尚未安装的 AUR 软件包。
+if ! pacman -Q -- "${aur_packages[@]}" >/dev/null 2>&1; then
+    paru -S --needed --noconfirm -- "${aur_packages[@]}"
 fi
 
 {{ end -}}

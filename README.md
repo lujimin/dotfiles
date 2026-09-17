@@ -24,10 +24,13 @@ $ chezmoi init --apply lujimin
 ## Arch Linux
 
 Arch 安装脚本仅匹配 `/etc/os-release` 中的 `ID=arch`，首次应用或脚本内容变化时执行。
-脚本使用 `pacman -Syu --needed --noconfirm` 刷新软件包数据库、升级系统中官方仓库的软件包，并安装清单中的软件包，无需提前手动运行系统升级。
+脚本会检查 pacman 的有效配置；未启用 `archlinuxcn` 时，在 `/etc/pacman.conf` 末尾添加该仓库，使用 `https://repo.archlinuxcn.org/$arch`。已有配置（包括通过 `Include` 引入的配置）会保留，不重复添加。
+首次安装 `archlinuxcn-keyring` 前，会本地签名信任 `farseerfc@archlinux.org` 的密钥；随后刷新数据库并安装密钥环，全程保留软件包签名校验。
+密钥环安装成功后，脚本使用 `pacman -Syu --needed --noconfirm` 升级系统中已配置仓库的软件包，并安装清单中的软件包，无需提前手动运行系统升级。
 
-AUR 包使用已安装的 `paru`，没有时使用 `yay`。请以拥有 sudo 权限的普通用户运行 chezmoi，并提前准备好 AUR helper 和构建环境。
-如果 AUR 包尚未安装且找不到 helper，脚本会在安装任何包之前报错，不会静默跳过。
+请以拥有 sudo 权限的普通用户运行 chezmoi，构建软件包不支持直接使用 root。
+脚本会安装 `base-devel` 和 `git`；如果尚未安装 `paru`，会自动从 AUR 获取构建文件，在临时目录中通过 `makepkg` 构建安装，并在退出时清理构建目录。
+AUR 包统一使用 `paru` 安装，无需提前准备 AUR helper。
 已经安装的 AUR 包不在本脚本中自动更新；请通过日常系统维护更新。
 
 Arch 安装清单包含 `fish`，配置应用后会通过 `command -v fish` 查找路径并将其设为默认 Shell，无需提前手动安装 Fish。
