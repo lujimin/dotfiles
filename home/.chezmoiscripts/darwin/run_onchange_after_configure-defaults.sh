@@ -9,6 +9,15 @@ set -eufo pipefail
 # 鼠标 > 跟踪速度 > 保存当前值（适用于妙控鼠标等鼠标设备）
 defaults write -g com.apple.mouse.scaling -float 2.5
 
+# 妙控鼠标 > 光标与点按 > 开启右侧辅助点按和智能缩放
+# 同步两套妙控鼠标偏好设置
+for mouse_domain in com.apple.AppleMultitouchMouse com.apple.driver.AppleBluetoothMultitouch.mouse; do
+    # 辅助点按 > 点按右侧
+    defaults write "$mouse_domain" MouseButtonMode -string TwoButton
+    # 智能缩放 > 用单指轻点两下
+    defaults write "$mouse_domain" MouseOneFingerDoubleTapGesture -int 1
+done
+
 # 触控板 > 光标与点按 > 跟踪速度 > 保存当前值（适用于妙控板和内置触控板）
 defaults write -g com.apple.trackpad.scaling -float 0.875
 
