@@ -1,0 +1,93 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+
+set -euo pipefail
+
+target_user="$(id -un)"
+target_uid="$(id -u)"
+target_home="$(getent passwd "$target_user" | cut -d: -f6)"
+authorized_keys="$target_home/.ssh/authorized_keys"
+
+sshd_path="$(command -v sshd)"
+
+# 只检查服务器端公钥，不生成密钥，也不复制客户端私钥。
+if [[ ! -s "$authorized_keys" ]] || ! ssh-keygen -l -f "$authorized_keys" >/dev/null 2>&1; then
+    echo "请先将登录公钥放入 ${authorized_keys}，并确认可以通过密钥登录。" >&2
+    exit 1
+fi
+
+# sshd 的 StrictModes 会拒绝所有权错误或可被其他用户写入的路径。
+for path in "$target_home" "$target_home/.ssh" "$authorized_keys"; do
+    read -r owner mode < <(stat -Lc '%u %a' -- "$path")
+    if [[ "$owner" != "$target_uid" && "$owner" != 0 ]] || (( (8#$mode & 022) != 0 )); then
+        echo "SSH 路径的所有权或权限不安全，请先修正：$path" >&2
+        exit 1
+    fi
+done
+
+config_file="/etc/ssh/sshd_config.d/00-chezmoi-$target_user-key-only.conf"
+work_dir="$(mktemp -d)"
+changed=false
+reload_attempted=false
+
+cleanup() {
+    status=$?
+    trap - EXIT
+    if (( status != 0 )) && "$changed"; then
+        echo "SSH 配置未能应用，正在恢复原配置。" >&2
+        if [[ -f "$work_dir/backup" ]]; then
+            sudo cp -p -- "$work_dir/backup" "$config_file"
+        else
+            sudo rm -f -- "$config_file"
+        fi
+        if "$reload_attempted"; then
+            sudo systemctl reload sshd.service || echo "恢复后重载失败，请检查 sshd.service。" >&2
+        fi
+    fi
+    rm -rf -- "$work_dir"
+    exit "$status"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+if sudo test -e "$config_file"; then
+    sudo cp -p -- "$config_file" "$work_dir/backup"
+fi
+
+cat > "$work_dir/config" <<EOF
+# 由 chezmoi 管理，仅限制指定用户的远程 SSH 认证方式。
+Match User $target_user
+    AuthenticationMethods publickey
+    PubkeyAuthentication yes
+    PasswordAuthentication no
+    KbdInteractiveAuthentication no
+Match all
+EOF
+
+sudo mkdir -p /etc/ssh/sshd_config.d
+changed=true
+sudo install -o root -g root -m 644 "$work_dir/config" "$config_file"
+sudo "$sshd_path" -t
+
+# 使用当前 SSH 连接参数检查最终配置；本地运行时使用回环地址。
+read -r client_address _ server_address server_port <<< "${SSH_CONNECTION:-127.0.0.1 0 127.0.0.1 22}"
+effective_config="$(sudo "$sshd_path" -T -C "user=$target_user,host=$client_address,addr=$client_address,laddr=$server_address,lport=$server_port")"
+for setting in 'authenticationmethods publickey' 'pubkeyauthentication yes' 'passwordauthentication no' 'kbdinteractiveauthentication no'; do
+    if ! grep -Fxq "$setting" <<< "$effective_config"; then
+        echo "SSH 规则未生效：${setting}。请检查 sshd_config 的 Include 和已有 Match 配置。" >&2
+        exit 1
+    fi
+done
+
+# 只重载已运行的服务，不启动新服务，也不终止现有 SSH 会话。
+if sudo systemctl is-active --quiet sshd.service; then
+    reload_attempted=true
+    sudo systemctl reload sshd.service
+else
+    echo "sshd.service 当前未运行；仅密钥登录配置将在服务启动时生效。"
+fi
+
+{{ end -}}
+{{ end -}}

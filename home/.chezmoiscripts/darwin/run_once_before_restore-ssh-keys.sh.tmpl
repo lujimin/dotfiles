@@ -1,0 +1,35 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+
+set -euo pipefail
+umask 077
+
+source_dir="$HOME/Library/Mobile Documents/com~apple~CloudDocs/工作/ssh"
+target_dir="$HOME/.ssh"
+keys=(id_ed25519 id_ed25519.pub)
+
+# 先确认待复制的文件可用，已有本地文件或符号链接一律保留。
+for key in "${keys[@]}"; do
+    if [[ -e "$target_dir/$key" || -L "$target_dir/$key" ]]; then
+        continue
+    fi
+    if [[ ! -f "$source_dir/$key" || ! -s "$source_dir/$key" || ! -r "$source_dir/$key" ]]; then
+        echo "请先在 iCloud Drive 中下载并保留文件：$source_dir/$key" >&2
+        exit 1
+    fi
+done
+
+mkdir -p "$target_dir"
+chmod 700 "$target_dir"
+for key in "${keys[@]}"; do
+    if [[ -e "$target_dir/$key" || -L "$target_dir/$key" ]]; then
+        continue
+    fi
+    cp -n "$source_dir/$key" "$target_dir/$key"
+    if [[ "$key" == *.pub ]]; then
+        chmod 644 "$target_dir/$key"
+    else
+        chmod 600 "$target_dir/$key"
+    fi
+done
+{{ end -}}
