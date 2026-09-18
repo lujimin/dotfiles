@@ -75,7 +75,7 @@ sudo "$sshd_path" -t
 read -r client_address _ server_address server_port <<< "${SSH_CONNECTION:-127.0.0.1 0 127.0.0.1 22}"
 effective_config="$(sudo "$sshd_path" -T -C "user=$target_user,host=$client_address,addr=$client_address,laddr=$server_address,lport=$server_port")"
 for setting in 'authenticationmethods publickey' 'pubkeyauthentication yes' 'passwordauthentication no' 'kbdinteractiveauthentication no'; do
-    if ! grep -Fxq "$setting" <<< "$effective_config"; then
+    if ! grep -Fixq "$setting" <<< "$effective_config"; then
         echo "SSH 规则未生效：${setting}。请检查 sshd_config 的 Include 和已有 Match 配置。" >&2
         exit 1
     fi
