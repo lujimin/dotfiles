@@ -27,6 +27,8 @@ $ chezmoi init --apply lujimin
 首次应用时，macOS 脚本会将上述两个密钥文件复制到 `~/.ssh`，已有同名文件或符号链接会保留。目录权限设为 `700`，新复制的私钥为 `600`、公钥为 `644`，SSH 配置使用本地私钥。源文件缺失或不可读时会提示并停止；准备好文件后重新运行 `chezmoi apply` 即可。
 密钥文件不会写入仓库；复制成功后不再自动同步，后续更换密钥或修改口令时需自行更新备份。
 
+macOS 安装清单包含 `herdr`，通过 Homebrew 安装和更新。
+
 ## Arch Linux
 
 ### 前置条件
@@ -35,7 +37,7 @@ $ chezmoi init --apply lujimin
 
 - 使用日常登录的普通用户，并确保系统已安装 `sudo`，且该用户具有 sudo 权限。
 - 为该用户设置可用的本机登录密码；安装软件和切换默认 Shell 时，按提示输入密码。
-- 确保网络可访问 Arch 软件源、archlinuxcn 和 GitHub。
+- 确保网络可访问 Arch 软件源、archlinuxcn、AUR 和 GitHub。
 - 将 SSH 登录公钥放入当前用户的 `~/.ssh/authorized_keys`，并先在另一个终端确认密钥登录成功。家目录、`.ssh` 和公钥文件应由当前用户或 root 所有，且不能允许组或其他用户写入。
 
 无需提前安装 Fish、paru 或桌面环境。
@@ -81,6 +83,8 @@ Arch 安装脚本仅匹配 `/etc/os-release` 中的 `ID=arch`，首次应用或�
 密钥环安装成功后，脚本使用 `pacman -Syu --needed --noconfirm` 升级系统中已配置仓库的软件包，并安装清单中的软件包。
 
 `paru` 和 `oh-my-pi` 直接通过 pacman 从 archlinuxcn 安装预编译包，并随系统升级更新，无需本机构建或提前安装 AUR helper。
+
+`herdr` 通过 `paru -S --needed --noconfirm herdr-bin` 安装 [AUR 二进制包](https://aur.archlinux.org/packages/herdr-bin)，无需编译 Herdr 源码。清单包含 AUR 打包所需的 `base-devel`；paru 以当前普通用户运行，安装时通过 sudo 提权。后续使用 `paru -Syu` 更新，不使用 `herdr update`。
 
 Arch 安装清单包含 `fish`，配置应用后会通过 `command -v fish` 查找路径并将其设为默认 Shell，无需提前手动安装 Fish。
 

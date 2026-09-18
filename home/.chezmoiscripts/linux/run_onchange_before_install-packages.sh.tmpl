@@ -4,16 +4,14 @@
 
 set -euo pipefail
 
-# 普通用户通过 sudo 执行系统操作，root 用户直接执行。
-run_as_root() {
-    if (( EUID == 0 )); then
-        "$@"
-    else
-        sudo "$@"
-    fi
-}
+# AUR 打包不能以 root 运行，系统安装操作通过 sudo 提权。
+if (( EUID == 0 )); then
+    echo "请使用具有 sudo 权限的普通用户运行 chezmoi。" >&2
+    exit 1
+fi
 
 packages=(
+    base-devel
     bat
     btop
     chezmoi
@@ -46,7 +44,7 @@ packages=(
 # 读取 pacman 的有效配置，兼容通过 Include 引入的仓库，避免重复添加。
 configured_repos="$(pacman-conf --repo-list)"
 if ! grep -Fxq archlinuxcn <<< "$configured_repos"; then
-    run_as_root tee -a /etc/pacman.conf >/dev/null <<'EOF'
+    sudo tee -a /etc/pacman.conf >/dev/null <<'EOF'
 
 [archlinuxcn]
 Server = https://repo.archlinuxcn.org/$arch
@@ -55,12 +53,15 @@ fi
 
 # 首次使用时，先信任签名密钥并安装密钥环。
 if ! pacman -Q archlinuxcn-keyring >/dev/null 2>&1; then
-    run_as_root pacman-key --lsign-key farseerfc@archlinux.org
-    run_as_root pacman -Sy --needed --noconfirm archlinuxcn-keyring
+    sudo pacman-key --lsign-key farseerfc@archlinux.org
+    sudo pacman -Sy --needed --noconfirm archlinuxcn-keyring
 fi
 
 # 刷新软件包数据库、升级整个系统，并安装清单中的软件包。
-run_as_root pacman -Syu --needed --noconfirm -- "${packages[@]}"
+sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+
+# 使用上游预编译二进制生成并安装 AUR 软件包，无需编译 Herdr 源码。
+paru -S --needed --noconfirm herdr-bin
 
 {{ end -}}
 {{ end -}}
