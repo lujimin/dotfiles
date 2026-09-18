@@ -88,6 +88,8 @@ Arch 安装脚本仅匹配 `/etc/os-release` 中的 `ID=arch`，首次应用或�
 
 Arch 安装清单包含 `fish`，配置应用后会通过 `command -v fish` 查找路径并将其设为默认 Shell，无需提前手动安装 Fish。
 
+初始化时会启用并生成 `zh_CN.UTF-8`，将系统默认语言写入 `/etc/locale.conf`。该设置在重新登录后生效，不修改时区或键盘布局。
+
 仓库会安装 OpenSSH，并在 `/etc/ssh/sshd_config.d/00-chezmoi-<用户名>-key-only.conf` 中为运行 chezmoi 的用户配置仅允许公钥认证，禁用 SSH 密码和键盘交互认证；其他账号及本机密码、sudo 认证不受影响。
 脚本面向标准 OpenSSH 配置：使用 `~/.ssh/authorized_keys`，已有主机密钥，并通过 Include 加载 `sshd_config.d/*.conf`。检查公钥、权限及配置生效情况后重载已运行的服务，失败恢复原配置；服务未运行时只保存配置。
 应用时保留现有 SSH 会话，确认新连接能通过密钥登录后再关闭。
