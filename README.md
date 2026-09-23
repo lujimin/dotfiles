@@ -29,6 +29,8 @@ $ chezmoi init --apply lujimin
 
 macOS 安装清单包含 `herdr`，通过 Homebrew 安装和更新。
 
+Homebrew 用户级配置由 `home/private_dot_homebrew/brew.env` 管理，应用到 `~/.homebrew/brew.env`，目录权限保持为 `700`（仅当前用户可访问）。普通 `brew upgrade` 跳过标记为 `auto_updates true` 的应用；显式使用 `--greedy` 或 `--greedy-auto-updates` 仍可升级这些应用。此路径适用于未设置 `XDG_CONFIG_HOME` 的环境。
+
 ## Arch Linux
 
 ### 前置条件
