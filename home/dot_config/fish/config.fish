@@ -24,25 +24,25 @@ if status is-interactive
     # Abbreviations expand visibly and only affect interactive input.
     if type -q eza
         if not type -q el; and not abbr --query el
-            abbr --add el 'eza --icons=auto --group-directories-first'
+            abbr --add el 'eza -F --icons --group-directories-first'
         end
         if not type -q ell; and not abbr --query ell
-            abbr --add ell 'eza --long --header --icons=auto --group-directories-first'
+            abbr --add ell 'eza -F -lhg --icons --group-directories-first'
         end
         if not type -q ela; and not abbr --query ela
-            abbr --add ela 'eza --long --all --header --icons=auto --group-directories-first'
+            abbr --add ela 'eza -F -lahg --icons --group-directories-first'
         end
         if not type -q elt; and not abbr --query elt
-            abbr --add elt 'eza --tree --level=2 --icons=auto --group-directories-first'
+            abbr --add elt 'eza -F -TL 2 --icons --group-directories-first'
         end
         if not type -q elg; and not abbr --query elg
-            abbr --add elg 'eza --long --all --header --git --icons=auto --group-directories-first'
+            abbr --add elg 'eza -F -lahg --git --icons --group-directories-first'
         end
         if not type -q eld; and not abbr --query eld
-            abbr --add eld 'eza --long --all --header --only-dirs --icons=auto --group-directories-first'
+            abbr --add eld 'eza -F -lahgD --icons --group-directories-first'
         end
         if not type -q elf; and not abbr --query elf
-            abbr --add elf 'eza --long --all --header --only-files --icons=auto --group-directories-first'
+            abbr --add elf 'eza -F -lahgf --icons --group-directories-first'
         end
     end
 
