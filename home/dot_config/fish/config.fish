@@ -27,22 +27,22 @@ if status is-interactive
             abbr --add el 'eza -F --icons --group-directories-first'
         end
         if not type -q ell; and not abbr --query ell
-            abbr --add ell 'eza -F -lhg --icons --group-directories-first'
+            abbr --add ell 'eza -F -lhg --icons --group-directories-first --time-style=iso'
         end
         if not type -q ela; and not abbr --query ela
-            abbr --add ela 'eza -F -lahg --icons --group-directories-first'
+            abbr --add ela 'eza -F -lahg --icons --group-directories-first --time-style=iso'
         end
         if not type -q elt; and not abbr --query elt
             abbr --add elt 'eza -F -TL 2 --icons --group-directories-first'
         end
         if not type -q elg; and not abbr --query elg
-            abbr --add elg 'eza -F -lahg --git --icons --group-directories-first'
+            abbr --add elg 'eza -F -lahg --git --icons --group-directories-first --time-style=iso'
         end
         if not type -q eld; and not abbr --query eld
-            abbr --add eld 'eza -F -lahgD --icons --group-directories-first'
+            abbr --add eld 'eza -F -lahgD --icons --group-directories-first --time-style=iso'
         end
         if not type -q elf; and not abbr --query elf
-            abbr --add elf 'eza -F -lahgf --icons --group-directories-first'
+            abbr --add elf 'eza -F -lahgf --icons --group-directories-first --time-style=iso'
         end
     end
 
