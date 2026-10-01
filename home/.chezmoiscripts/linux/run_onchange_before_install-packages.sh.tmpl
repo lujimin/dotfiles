@@ -29,7 +29,6 @@ packages=(
     lazygit
     neovim
     nodejs
-    oh-my-pi
     openai-codex
     openssh
     paru
@@ -63,8 +62,8 @@ fi
 # 刷新软件包数据库、升级整个系统，并安装清单中的软件包。
 sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
 
-# 使用上游预编译二进制生成并安装 AUR 软件包，无需编译 Herdr 源码。
-paru -S --needed --noconfirm herdr-bin
+# 使用上游预编译二进制生成并安装 AUR 软件包，无需编译源码。
+paru -S --needed --noconfirm herdr-bin oh-my-pi-bin
 
 {{ end -}}
 {{ end -}}
