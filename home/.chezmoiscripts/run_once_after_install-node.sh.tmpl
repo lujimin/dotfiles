@@ -1,0 +1,12 @@
+{{ if or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch")) -}}
+#!/bin/bash
+
+set -euo pipefail
+
+# 软件包安装完成后，首次初始化最新版 Node.js 并设为默认版本。
+fnm_env="$(fnm env --shell bash)"
+eval "$fnm_env"
+fnm install --latest --use
+node_version="$(fnm current)"
+fnm default "$node_version"
+{{ end -}}

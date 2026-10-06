@@ -92,6 +92,19 @@ chezmoi init --apply lujimin
 
 后续使用 `paru -Syu` 更新系统及 AUR 软件，包括 `herdr`；不要运行 `herdr update`。
 
+## Node.js
+
+macOS 和 Arch Linux 均使用 `fnm` 管理 Node.js。首次应用初始化脚本时，会安装当时最新的 Node.js 正式版本并设为默认版本；后续 `chezmoi apply` 不会重复升级。
+
+Fish 启动时自动加载 `fnm`，进入项目目录时根据 `.node-version` 或 `.nvmrc` 切换版本。
+
+需要更新 Node.js 时，在 Fish 中执行：
+
+```fish
+fnm install --latest --use
+fnm default (fnm current)
+```
+
 ## Fish 中的 eza 快捷命令
 
 输入缩写后按空格或回车展开，可追加路径或参数。若名称已被其他命令、函数或缩写占用，则不覆盖。

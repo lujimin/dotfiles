@@ -19,6 +19,11 @@ if type -q brew
     end
 end
 
+# Initialize Node.js for interactive shells and Fish scripts.
+if type -q fnm
+    fnm env --use-on-cd --shell fish | source
+end
+
 if status is-interactive
     # Use an e prefix to keep Fish defaults and other tool names available.
     # Abbreviations expand visibly and only affect interactive input.
