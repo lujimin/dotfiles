@@ -1,0 +1,14 @@
+{{ if or (eq .chezmoi.os "darwin") (and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch")) -}}
+#!/bin/bash
+
+set -euo pipefail
+
+# 已有配置时正常结束，由 chezmoi 记录为已执行。
+if [ -e "$HOME/.config/starship.toml" ]; then
+    exit 0
+fi
+
+# 初始化结束后，首次生成使用 Nerd Font 符号的 Starship 配置。
+mkdir -p "$HOME/.config"
+starship preset nerd-font-symbols -o ~/.config/starship.toml
+{{ end -}}

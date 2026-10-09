@@ -92,6 +92,10 @@ chezmoi init --apply lujimin
 
 后续使用 `paru -Syu` 更新系统及 AUR 软件，包括 `herdr`；不要运行 `herdr update`。
 
+## Starship
+
+macOS 和 Arch Linux 初始化结束后，会执行一次 `starship preset nerd-font-symbols -o ~/.config/starship.toml`，生成使用 Nerd Font 符号的提示符配置。已有 `~/.config/starship.toml` 时会正常跳过并记为已执行；后续 `chezmoi apply` 不会重复执行。
+
 ## Node.js
 
 macOS 和 Arch Linux 均使用 `fnm` 管理 Node.js。首次应用初始化脚本时，会安装当时最新的 Node.js 正式版本并设为默认版本；后续 `chezmoi apply` 不会重复升级。
