@@ -1,4 +1,3 @@
-{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 set -euo pipefail
@@ -32,4 +31,3 @@ for key in "${keys[@]}"; do
         chmod 600 "$target_dir/$key"
     fi
 done
-{{ end -}}
